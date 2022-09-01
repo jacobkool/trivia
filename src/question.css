@@ -1,0 +1,11 @@
+.correct_selection{
+    margin: 1rem;
+    font-size: 2.2rem;
+    cursor: pointer;
+    background-color: green;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+}
