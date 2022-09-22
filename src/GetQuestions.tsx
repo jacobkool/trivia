@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect} from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -6,17 +6,28 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import styled from '@emotion/styled';
-import axios from 'axios';
 
-// interface Props {
-//     setQuestions: (value: any[] | (prevQuestions: any[]) => any[]) => void;
-// }
 
-const GetQuestions = (props:any) => {
-    const [difficulty, setDifficulty] = useState('any')
-    const [category, setCategory] = useState('9')
-    const [numOfQuestions, setNumOfQuestions] = useState('10')
-    const [buttonEnabled, setButtonEnabled] = useState(true);
+interface Props {
+    difficulty: string
+    setDifficulty: React.Dispatch<React.SetStateAction<string>>
+    category: number
+    setCategory: React.Dispatch<React.SetStateAction<number>>
+    numOfQuestions: number
+    setNumOfQuestions: React.Dispatch<React.SetStateAction<number>>
+    getQuestionsFromAPI: Function
+    buttonEnabled: boolean
+    setButtonEnabled: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const GetQuestions = ({difficulty, setDifficulty, category, setCategory, numOfQuestions, setNumOfQuestions, getQuestionsFromAPI, buttonEnabled, setButtonEnabled}:any):JSX.Element => {
+    useEffect(() => {
+        if (numOfQuestions >= 5 && numOfQuestions <= 10) {
+            setButtonEnabled(true)
+        } else {
+            setButtonEnabled(false)
+        }
+      }, [numOfQuestions]);
 
     const handleDifficultyChange = (event: SelectChangeEvent) => {
         setDifficulty(event.target.value);
@@ -26,21 +37,8 @@ const GetQuestions = (props:any) => {
         setCategory(event.target.value);
     }
 
-    const validNumbers = ['10', '11',  '12', '13', '14', '15', '16', '17', '18','19', '20']
-
-    const handleNumOfQuestionsChange = (evt:any):void => {
-        evt.preventDefault();
+    const handleNumOfQuestionsChange = (evt:any) => {
         setNumOfQuestions(evt.target.value)
-        if (validNumbers.indexOf(evt.target.value) === -1) {
-            setButtonEnabled(false);
-        } else {
-            setButtonEnabled(true);
-        }
-    }
-
-    const getQuestionsFromAPI = async ():Promise<void> => {
-        const data = await axios.get(`https://opentdb.com/api.php?amount=${numOfQuestions}&category=${category}&difficulty=${difficulty === 'any' ? '' : difficulty}&type=multiple`);
-        props.setQuestions(data.data.results);
     }
 
 
@@ -51,14 +49,30 @@ const GetQuestions = (props:any) => {
         align-items: center;
         justify-content: space-evenly;
         padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        flex-direction: column;
     `
 
+    const OptionsWrapper = styled.div`
+        display: flex;
+        margin: 3rem;
+        align-items: center;
+        justify-content: space-evenly;
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    `
+
+
+
     const ButtonWrapper = styled.div`
-        padding-left: 10px;
+        padding-bottom: 3rem;
     `
 
     return (
     <QuestionFormContainer>
+        <OptionsWrapper>
                 <FormControl required sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-required-label">Category</InputLabel>
                     <Select
@@ -73,7 +87,7 @@ const GetQuestions = (props:any) => {
                             <MenuItem value={'12'}>Entertainment: Music</MenuItem>
                             <MenuItem value={'14'}>Entertainment: Television</MenuItem>
                             <MenuItem value={'15'}>Entertainment: Video Games</MenuItem>
-                            <MenuItem value={'16'}>Entertainment: Video Games</MenuItem>
+                            <MenuItem value={'16'}>Entertainment: Board Games</MenuItem>
                             <MenuItem value={'17'}>Science and Nature</MenuItem>
                             <MenuItem value={'18'}>Science: Computers</MenuItem>
                             <MenuItem value={'19'}>Science: Math</MenuItem>
@@ -89,7 +103,7 @@ const GetQuestions = (props:any) => {
                     <Select
                         labelId="demo-simple-select-required-label"
                         id="demo-simple-select-required"
-                        label="Age *"
+                        label="Difficulty *"
                         onChange={handleDifficultyChange}
                         value={difficulty}
                     >
@@ -101,14 +115,14 @@ const GetQuestions = (props:any) => {
                 </FormControl>
                 <TextField 
                     id={buttonEnabled ? "outlined-basic" : 'standard-error-helper-text'}
-                    label="Number of Questions (10-20)" 
+                    label="Number of Questions (5-10)" 
                     variant="outlined" 
                     value={numOfQuestions}
                     onChange={handleNumOfQuestionsChange}
                     error={!buttonEnabled}
                     inputProps={{
                         inputMode: 'numeric', 
-                        pattern: '[10-20]*'
+                        pattern: '[5-10]*'
                     }}
                     sx={{
                         '& .MuiFormHelperText-root': {
@@ -120,8 +134,9 @@ const GetQuestions = (props:any) => {
                       }}
                     key='key'
                     autoFocus
-                    helperText={buttonEnabled ? '' : 'Please provide a number between 10-20'}
+                    helperText={buttonEnabled ? '' : 'Please provide a number between 5-10'}
                 />
+            </OptionsWrapper>
                 <ButtonWrapper>
                     <Button onClick={getQuestionsFromAPI} variant="contained" disabled={!buttonEnabled}>
                         Get Questions
