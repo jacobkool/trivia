@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -20,7 +20,8 @@ interface Props {
     setButtonEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const GetQuestions = ({difficulty, setDifficulty, category, setCategory, numOfQuestions, setNumOfQuestions, getQuestionsFromAPI, buttonEnabled, setButtonEnabled}:any):JSX.Element => {
+const GetQuestions = ({difficulty, setDifficulty, category, setCategory, numOfQuestions, setNumOfQuestions, getQuestionsFromAPI}:any):JSX.Element => {
+    const [buttonEnabled, setButtonEnabled] = useState(true);
     useEffect(() => {
         if (numOfQuestions >= 5 && numOfQuestions <= 10) {
             setButtonEnabled(true)

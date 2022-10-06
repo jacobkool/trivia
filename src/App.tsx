@@ -21,7 +21,6 @@ function App(): JSX.Element  {
   const [difficulty, setDifficulty] = useState('any')
   const [category, setCategory] = useState('9')
   const [numOfQuestions, setNumOfQuestions] = useState('5')
-  const [buttonEnabled, setButtonEnabled] = useState(true);
 
   const AppContainer = styled.div`
         display: flex;
@@ -138,8 +137,6 @@ function App(): JSX.Element  {
               setCategory={setCategory}
               numOfQuestions={numOfQuestions}
               setNumOfQuestions={setNumOfQuestions}
-              buttonEnabled={buttonEnabled}
-              setButtonEnabled={setButtonEnabled}
               />
           }
         
