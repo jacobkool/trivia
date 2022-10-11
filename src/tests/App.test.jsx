@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from '../App';
 import userEvent from '@testing-library/user-event';
-import GetQuestions from '../GetQuestions';
 
 test('Button is enabled on page load', () => {
     render(<App/>)
